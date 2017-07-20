@@ -265,6 +265,7 @@ freeboard.loadWidgetPlugin({
         display_name: "Floor Plan URL",
         description: "https://yourhost/yourpath/your_floorplan.jpg",
         type: "data",
+        force_data: "static",
         multi_input: false,
         incoming_parser: true,
         outgoing_parser: false
