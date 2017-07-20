@@ -279,6 +279,6 @@ freeboard.loadWidgetPlugin({
         required: true
     }],
     newInstance: function(settings, newInstanceCallback) {
-        newInstanceCallback(new iFloorPlanWidget2(settings));
+        newInstanceCallback(new iFloorPlanWidget(settings));
     }
 });
