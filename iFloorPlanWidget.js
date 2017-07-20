@@ -231,14 +231,6 @@ freeboard.loadWidgetPlugin({
         default_value: "border:1px solid #d3d3d3;padding-left: 0; padding-right: 0;margin-left: auto;margin-right: auto;display: block;",
         description: "Default to put border and center canvas in window (horizontally): border:1px solid #d3d3d3;padding-left: 0; padding-right: 0;margin-left: auto;margin-right: auto;display: block;"
     }, {
-        name: "floorPlan_URL",
-        display_name: "Floor Plan URL",
-        description: "https://yourhost/yourpath/your_floorplan.jpg",
-        type: "data",
-        multi_input: false,
-        incoming_parser: true,
-        outgoing_parser: false
-    }, {
         name: "display_Text_CSS",
         display_name: "Text CSS",
         default_value: "bold 12px Verdana",
@@ -268,6 +260,14 @@ freeboard.loadWidgetPlugin({
         incoming_parser: true,
         outgoing_parser: false,
         default_value: '[{"name": "mySensorName" "x":50, "y":50}]'
+    }, {
+        name: "floorPlan_URL",
+        display_name: "Floor Plan URL",
+        description: "https://yourhost/yourpath/your_floorplan.jpg",
+        type: "data",
+        multi_input: false,
+        incoming_parser: true,
+        outgoing_parser: false
     }, {
         name: "updateSensorXY",
         display_name: "Sensor Coordinates Update",
