@@ -202,8 +202,11 @@ freeboard.loadWidgetPlugin({
     }, {
         name: "floorPlan_URL",
         display_name: "Floor Plan URL",
-        default_value: "https://s3.amazonaws.com/uploads.hipchat.com/76688/547710/TCJQkTH3rsQQBkD/7408d6e1d8a63395e71cce4d58a19576.jpg",
-        type: "text"
+        description: "https://yourhost/yourpath/your_floorplan.jpg",
+        type: "data",
+        multi_input: false,
+        incoming_parser: true,
+        outgoing_parser: false
     }, {
         name: "display_Text_CSS",
         display_name: "Text CSS",
@@ -219,11 +222,6 @@ freeboard.loadWidgetPlugin({
         display_name: "Databox Width",
         default_value: "60",
         type: "integer"
-    }, {
-        name: "display_Text_CSS",
-        display_name: "Text CSS",
-        default_value: "bold 12px Verdana",
-        type: "text"
     }, {
         name: "floorPlan_data",
         display_name: "Floor Plan Data Source",
