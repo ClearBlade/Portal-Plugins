@@ -132,16 +132,17 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             data_container.addChild(dataPointContainer);
         }
 
-        deviceName = new createjs.Text(name, currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
+        deviceName = new createjs.Text(dataPoint[currentSettings.device_name_display_property], 
+            currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
         deviceName.textAlign = "center";
         deviceName.visible = currentSettings.displaySensorName;
         deviceName.x = (boxwidth - boxwidth / 2) + 5;
-        deviceName.y = -20;
+        deviceName.y = -5;
         data_container.addChild(deviceName);
 
         data_container.name = dataPoint[[currentSettings.device_name_display_property]];
-        data_container.x = dataPoint.x;
-        data_container.y = dataPoint.y;
+        data_container.x = dataPoint.x * SCALE;
+        data_container.y = dataPoint.y * SCALE;
 
         stage.addChild(data_container);
 
