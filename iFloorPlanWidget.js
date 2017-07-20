@@ -67,55 +67,85 @@ var iFloorPlanWidget = function(settings, updateCallback) {
         resizeCanvas();
     }
 
+    function calculateCoordinates() {
+
+    }
+
     function plotData() {
         while (stage.children.length > 1) {
-            stage.removeChild(stage.children[stage.children.length - 1]);
+            //stage.removeChild(stage.children[stage.children.length - 1]);
+            stage.removeChildAt(stage.children.length - 1);
             stage.update();
         }
         if (dataPoints !== undefined) {
             for (i = 0; i < dataPoints.length; i++) {
-                drawIcon(dataPoints[i][currentSettings.device_name_display_property], dataPoints[i].x * SCALE, dataPoints[i].y * SCALE, dataPoints[i].properties);
+                //drawIcon(dataPoints[i][currentSettings.device_name_display_property], dataPoints[i].x * SCALE, dataPoints[i].y * SCALE, dataPoints[i].properties);
+                drawIcon(dataPoints[i]);
             }
         }
     }
 
-    function drawIcon(name, x, y, textObj) {
+    //function drawIcon(dataPoints) {
+    function drawIcon(dataPoint) {
         var valueText;
         var deviceName;
         var boxheight = currentSettings.databoxHeight;
         var boxwidth = currentSettings.databoxWidth;
         stage.mouseMoveOutside = false;
-        if (isNaN(x))
-            x = 20;
-        if (isNaN(y))
-            y = 20;
+        
+        //Set default coordinates and background color
+        if (isNaN(dataPoint.x))
+            dataPoint.x = 20;
+        if (isNaN(dataPoint.y))
+            dataPoint.y = 20;
+        if (!dataPoint.backgroundColor)
+            dataPoint.backgroundColor = currentSettings.primary_display_textcolor;
+        
+        //Create the container that will hold all of the canvas elements related to a datapoint
         var data_container = new createjs.Container();
-        for (var i = 0; i < textObj.length; i++) {
+
+        if(currentSettings.displaySensorIcon) {
+            var sensorIcon = new createjs.Shape();
+            sensorIcon.graphics.beginFill(dataPoint.backgroundColor).drawCircle(0, 0, 5);
+            data_container.addChild(sensorIcon);
+        }
+
+        //Loop through each datapoint property
+        for (var i = 0; i < dataPoint.properties.length; i++) {
             var shape = new createjs.Shape();
             var dataPointContainer = new createjs.Container();
-            shape.graphics.beginFill(textObj[i].backgroundColor).drawRect(0, 0, boxwidth, boxheight);
-            valueText = new createjs.Text(textObj[i].name.charAt(0) + ": " + textObj[i].value, currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
+            shape.graphics.beginFill(dataPoint.properties[i].backgroundColor).drawRect(15, -5, boxwidth, boxheight);
+
+            //Create a text element to hold the property value
+            valueText = new createjs.Text(dataPoint.properties[i].name + ": " + 
+                dataPoint.properties[i].value, currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
             valueText.textAlign = "center";
             valueText.textBaseline = "middle";
             valueText.x = boxwidth - boxwidth / 2;
             valueText.y = boxheight - boxheight / 2;
+
+            //Add the value rectangle and the text to the datapoint container
             dataPointContainer.addChild(shape, valueText);
             dataPointContainer.y = boxheight * i;
+
+            //Add the data point container to the 
             data_container.addChild(dataPointContainer);
         }
 
         deviceName = new createjs.Text(name, currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
         deviceName.textAlign = "center";
         deviceName.visible = currentSettings.displaySensorName;
-        deviceName.x = boxwidth - boxwidth / 2;
-        deviceName.y = -15;
+        deviceName.x = (boxwidth - boxwidth / 2) + 5;
+        deviceName.y = -20;
         data_container.addChild(deviceName);
 
-        data_container.name = name;
-        data_container.x = x;
-        data_container.y = y;
+        data_container.name = dataPoint[[currentSettings.device_name_display_property]];
+        data_container.x = dataPoint.x;
+        data_container.y = dataPoint.y;
 
         stage.addChild(data_container);
+
+        //Code to allow sensor locations to be dragged/dropped
         if (currentSettings.allowSensorLocationUpdates) {
             data_container.on("pressmove", function(evt) {
                 blockUpdates = true; //Block updating the view (causes a redraw)
@@ -243,6 +273,14 @@ freeboard.loadWidgetPlugin({
     }, {
         name: "allowSensorLocationUpdates",
         display_name: "Allow Sensor Location Updates",
+        type: "boolean",
+        force_data: "static",
+        multi_input: false,
+        incoming_parser: false,
+        outgoing_parser: false
+    }, {
+        name: "displaySensorIcon",
+        display_name: "Display Sensor Icon",
         type: "boolean",
         force_data: "static",
         multi_input: false,
