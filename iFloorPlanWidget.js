@@ -245,6 +245,7 @@ freeboard.loadWidgetPlugin({
     }, {
         name: "primary_display_textcolor",
         display_name: "Text Color",
+        description: "ex. black, #000, rgb(0,0,0), etc.",
         default_value: "black",
         type: "text"
     }, {
