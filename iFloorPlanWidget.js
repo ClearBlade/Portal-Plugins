@@ -243,6 +243,11 @@ freeboard.loadWidgetPlugin({
         default_value: "bold 12px Verdana",
         type: "text"
     }, {
+        name: "primary_display_textcolor",
+        display_name: "Text Color",
+        default_value: "black",
+        type: "text"
+    }, {
         name: "databoxHeight",
         display_name: "Databox Height",
         default_value: "15",
