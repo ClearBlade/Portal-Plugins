@@ -119,8 +119,8 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             //Create a text element to hold the property value
             valueText = new createjs.Text(dataPoint.properties[i].name + ": " + 
                 dataPoint.properties[i].value, currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
-            valueText.textAlign = "center";
-            valueText.textBaseline = "middle";
+            valueText.textAlign = "left";
+            valueText.textBaseline = "top";
             valueText.x = boxwidth - boxwidth / 2;
             valueText.y = boxheight - boxheight / 2;
 
@@ -134,9 +134,9 @@ var iFloorPlanWidget = function(settings, updateCallback) {
 
         deviceName = new createjs.Text(dataPoint[currentSettings.device_name_display_property], 
             currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
-        deviceName.textAlign = "center";
+        deviceName.textAlign = "left";
         deviceName.visible = currentSettings.displaySensorName;
-        deviceName.x = (boxwidth - boxwidth / 2) + 5;
+        deviceName.x = 10;
         deviceName.y = -5;
         data_container.addChild(deviceName);
 
