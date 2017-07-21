@@ -67,10 +67,6 @@ var iFloorPlanWidget = function(settings, updateCallback) {
         resizeCanvas();
     }
 
-    function calculateCoordinates() {
-
-    }
-
     function plotData() {
         while (stage.children.length > 1) {
             //stage.removeChild(stage.children[stage.children.length - 1]);
@@ -93,7 +89,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
         var boxwidth = currentSettings.databoxWidth;
         stage.mouseMoveOutside = false;
         
-        //Set default coordinates and background color
+        //Set default coordinates and datapoint background color
         if (isNaN(dataPoint.x))
             dataPoint.x = 20;
         if (isNaN(dataPoint.y))
@@ -104,6 +100,8 @@ var iFloorPlanWidget = function(settings, updateCallback) {
         //Create the container that will hold all of the canvas elements related to a datapoint
         var data_container = new createjs.Container();
 
+        //If sensor icons are to be displayed, create the sensor icon and
+        //add it to the container
         if(currentSettings.displaySensorIcon) {
             var sensorIcon = new createjs.Shape();
             sensorIcon.graphics.beginFill(dataPoint.backgroundColor).drawCircle(0, 0, 5);
@@ -112,8 +110,10 @@ var iFloorPlanWidget = function(settings, updateCallback) {
 
         //Loop through each datapoint property
         for (var i = 0; i < dataPoint.properties.length; i++) {
-            var shape = new createjs.Shape();
             var dataPointContainer = new createjs.Container();
+
+            //Create a rectangle in which to display the datapoint property
+            var shape = new createjs.Shape();
             shape.graphics.beginFill(dataPoint.properties[i].backgroundColor).drawRect(15, 0, boxwidth, boxheight);
 
             //Create a text element to hold the property value
@@ -132,13 +132,29 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             data_container.addChild(dataPointContainer);
         }
 
+        //Create a container to house the deviceName and its bounding rectangle
+        var nameContainer = new createjs.Container();
+        nameContainer.visible = currentSettings.displaySensorName;
+        nameContainer.x = 10;
+        nameContainer.y = -25;
+        
+        //Create the bounding rectangle for the device name
+        var nameRect = new createjs.Shape();
+        nameRect.graphics.beginFill("#aad8f7").drawRect(0, 0, boxwidth, boxheight);
+
+        //Create the text element to hold the device name
         deviceName = new createjs.Text(dataPoint[currentSettings.device_name_display_property], 
             currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
         deviceName.textAlign = "left";
-        deviceName.visible = currentSettings.displaySensorName;
-        deviceName.x = 10;
-        deviceName.y = -25;
-        data_container.addChild(deviceName);
+        deviceName.textBaseline = "middle";
+        deviceName.x = 5;
+        deviceName.y = boxheight - boxheight / 2;
+
+        //Add the name
+        nameContainer.addChild(nameRect, deviceName);
+
+        //Add the name container to the parent container
+        data_container.addChild(nameContainer);
 
         data_container.name = dataPoint[[currentSettings.device_name_display_property]];
         data_container.x = dataPoint.x * SCALE;
