@@ -274,7 +274,7 @@ freeboard.loadWidgetPlugin({
         type: "data",
         multi_input: true,
         incoming_parser: true,
-        outgoing_parser: true,
+        outgoing_parser: false,
         default_value: '[{"name": "mySensorName" "x":50, "y":50}]'
     }, {
         name: "floorPlan_URL",
