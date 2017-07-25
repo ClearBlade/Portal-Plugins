@@ -13,7 +13,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
     var sizeInBlocks = settings.sizeInBlocks;
     var dataPoints;
     var url = "";
-    var stage, output;
+    var stage;
     var SCALE;
     var blockUpdates = false;
 
@@ -204,6 +204,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
 
         device_container.on("mouseover", function(evt) {
             this.children[(this.children.length - 1)].visible = true;
+            stage.setChildIndex(this, stage.children.length -1);
             stage.update();
         });
         device_container.on("mouseout", function(evt) {
