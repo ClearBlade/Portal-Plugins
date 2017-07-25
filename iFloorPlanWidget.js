@@ -213,14 +213,15 @@ var iFloorPlanWidget = function(settings, updateCallback) {
                 } else {
                     dataPoints = newValue;
                 }
+                //Don't update if we are dragging
+                if (!blockUpdates) {
+                    plotData();
+                }
             } else {
                 if ((settingName == "floorPlan_URL") && (currentSettings._datatype !== "static")) {
                     url = newValue;
+                    resizeCanvas();
                 }
-            }
-            //Don't update if we are dragging
-            if (!blockUpdates) {
-                plotData();
             }
         }
     }
