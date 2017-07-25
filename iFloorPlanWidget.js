@@ -12,6 +12,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
     var currentSettings = settings;
     var sizeInBlocks = settings.sizeInBlocks;
     var dataPoints;
+    var url = "";
     var stage, output;
     var SCALE;
     var blockUpdates = false;
@@ -26,7 +27,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             var bgImg = document.createElement("img");
             stage.canvas.width = stage.canvas.parentElement.clientWidth;
             stage.canvas.height = stage.canvas.parentElement.clientHeight;
-            bgImg.src = currentSettings.floorPlan_URL;
+            bgImg.src = url;
             bgImg.onload = function() {
                 var bg = new createjs.Bitmap(bgImg);
                 var backgroundImageSize = calculateAspectRatioFit(bgImg.width, bgImg.height, stage.canvas.width, stage.canvas.height);
@@ -214,6 +215,10 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             //Don't update if we are dragging
             if (!blockUpdates)
                 plotData();
+        } else {
+            if ((settingName == "floorPlan_URL") && (currentSettings._datatype !== "static")) {
+                url = newValue;
+            }
         }
     }
 
