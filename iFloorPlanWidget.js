@@ -206,18 +206,21 @@ var iFloorPlanWidget = function(settings, updateCallback) {
     }
 
     self.onCalculatedValueChanged = function(settingName, newValue) {
-        if ((settingName == "floorPlan_data") && (currentSettings._datatype !== "static")) {
-            if (newValue.hasOwnProperty("results")) {
-                dataPoints = newValue.results;
+        if(currentSettings._datatype !== "static") {
+            if ((settingName == "floorPlan_data") && (currentSettings._datatype !== "static")) {
+                if (newValue.hasOwnProperty("results")) {
+                    dataPoints = newValue.results;
+                } else {
+                    dataPoints = newValue;
+                }
             } else {
-                dataPoints = newValue;
+                if ((settingName == "floorPlan_URL") && (currentSettings._datatype !== "static")) {
+                    url = newValue;
+                }
             }
             //Don't update if we are dragging
-            if (!blockUpdates)
+            if (!blockUpdates) {
                 plotData();
-        } else {
-            if ((settingName == "floorPlan_URL") && (currentSettings._datatype !== "static")) {
-                url = newValue;
             }
         }
     }
