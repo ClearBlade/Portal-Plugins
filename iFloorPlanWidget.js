@@ -219,7 +219,11 @@ var iFloorPlanWidget = function(settings, updateCallback) {
                 }
             } else {
                 if ((settingName == "floorPlan_URL") && (currentSettings._datatype !== "static")) {
-                    url = newValue;
+                    if(newValue !== null) {
+                        url = newValue;
+                    } else {
+                        url = "";
+                    }
                     resizeCanvas();
                 }
             }
