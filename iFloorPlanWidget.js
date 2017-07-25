@@ -99,15 +99,41 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             dataPoint.backgroundColor = currentSettings.primary_display_textcolor;
         
         //Create the container that will hold all of the canvas elements related to a datapoint
-        var data_container = new createjs.Container();
+        var device_container = new createjs.Container();
 
         //If sensor icons are to be displayed, create the sensor icon and
         //add it to the container
         if(currentSettings.displaySensorIcon) {
             var sensorIcon = new createjs.Shape();
             sensorIcon.graphics.beginFill(dataPoint.backgroundColor).drawCircle(0, 0, 5);
-            data_container.addChild(sensorIcon);
+            device_container.addChild(sensorIcon);
         }
+
+        var device_data_container = new createjs.Container();
+        device_data_container.visible = currentSettings.displaySensorName;
+
+        //Create a container to house the deviceName and its bounding rectangle
+        var nameContainer = new createjs.Container();
+        //nameContainer.x = 10;
+        //nameContainer.y = -25;
+        
+        //Create the bounding rectangle for the device name
+        var nameRect = new createjs.Shape();
+        nameRect.graphics.beginFill("#aad8f7").drawRect(15, 0, boxwidth, boxheight);
+
+        //Create the text element to hold the device name
+        deviceName = new createjs.Text(dataPoint[currentSettings.device_name_display_property], 
+            currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
+        deviceName.textAlign = "left";
+        deviceName.textBaseline = "middle";
+        deviceName.x = 20;
+        deviceName.y = boxheight - boxheight / 2;
+
+        //Add the name
+        nameContainer.addChild(nameRect, deviceName);
+
+        //Add the name container to the device data container
+        device_data_container.addChild(nameContainer);
 
         //Loop through each datapoint property
         for (var i = 0; i < dataPoint.properties.length; i++) {
@@ -127,45 +153,37 @@ var iFloorPlanWidget = function(settings, updateCallback) {
 
             //Add the value rectangle and the text to the datapoint container
             dataPointContainer.addChild(shape, valueText);
-            dataPointContainer.y = boxheight * i;
+            dataPointContainer.y = boxheight * (i+1);
 
             //Add the data point container to the 
-            data_container.addChild(dataPointContainer);
+            device_data_container.addChild(dataPointContainer);
         }
 
-        //Create a container to house the deviceName and its bounding rectangle
-        var nameContainer = new createjs.Container();
-        nameContainer.visible = currentSettings.displaySensorName;
-        nameContainer.x = 10;
-        nameContainer.y = -25;
-        
-        //Create the bounding rectangle for the device name
-        var nameRect = new createjs.Shape();
-        nameRect.graphics.beginFill("#aad8f7").drawRect(0, 0, boxwidth, boxheight);
+        //Add code to make sure the popup will fit on the canvas
+        var deviceX = dataPoint.x * SCALE;
+        var deviceY = dataPoint.y * SCALE;
 
-        //Create the text element to hold the device name
-        deviceName = new createjs.Text(dataPoint[currentSettings.device_name_display_property], 
-            currentSettings.display_Text_CSS, currentSettings.primary_display_textcolor);
-        deviceName.textAlign = "left";
-        deviceName.textBaseline = "middle";
-        deviceName.x = 5;
-        deviceName.y = boxheight - boxheight / 2;
+        //If x is too far right, display the content on the left of the icon
+        if(stage.canvas.width - deviceX < boxwidth) {
+            device_data_container.x = - boxwidth - 25;
+        }
 
-        //Add the name
-        nameContainer.addChild(nameRect, deviceName);
+        //If y is too far down, display the content above the icon
+        if(stage.canvas.height - deviceY > (dataPoint.properties.length + 1) * boxheight) {
+            device_data_container.y = -(dataPoint.properties.length + 1) * boxheight;
+        }
 
-        //Add the name container to the parent container
-        data_container.addChild(nameContainer);
+        device_container.addChild(device_data_container);
+        device_container.name = dataPoint[[currentSettings.device_name_display_property]];
 
-        data_container.name = dataPoint[[currentSettings.device_name_display_property]];
-        data_container.x = dataPoint.x * SCALE;
-        data_container.y = dataPoint.y * SCALE;
+        device_container.x = deviceX;
+        device_container.y = deviceY;
 
-        stage.addChild(data_container);
+        stage.addChild(device_container);
 
         //Code to allow sensor locations to be dragged/dropped
         if (currentSettings.allowSensorLocationUpdates) {
-            data_container.on("pressmove", function(evt) {
+            device_data_container.on("pressmove", function(evt) {
                 blockUpdates = true; //Block updating the view (causes a redraw)
                 evt.currentTarget.x = evt.stageX;
                 evt.currentTarget.y = evt.stageY;
@@ -173,7 +191,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
                 stage.update();
             });
 
-            data_container.on("pressup", function(evt) {
+            device_data_container.on("pressup", function(evt) {
                 blockUpdates = false;
                 evt.currentTarget.x = evt.stageX;
                 evt.currentTarget.y = evt.stageY;
@@ -184,11 +202,11 @@ var iFloorPlanWidget = function(settings, updateCallback) {
             });
         }
 
-        data_container.on("mouseover", function(evt) {
+        device_container.on("mouseover", function(evt) {
             this.children[(this.children.length - 1)].visible = true;
             stage.update();
         });
-        data_container.on("mouseout", function(evt) {
+        device_container.on("mouseout", function(evt) {
             this.children[(this.children.length - 1)].visible = currentSettings.displaySensorName;
             stage.update();
         });
