@@ -169,7 +169,7 @@ var iFloorPlanWidget = function(settings, updateCallback) {
         }
 
         //If y is too far down, display the content above the icon
-        if(stage.canvas.height - deviceY > (dataPoint.properties.length + 1) * boxheight) {
+        if(stage.canvas.height - deviceY < (dataPoint.properties.length + 1) * boxheight) {
             device_data_container.y = -(dataPoint.properties.length + 1) * boxheight;
         }
 
